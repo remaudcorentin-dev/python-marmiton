@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import urllib.parse
 import urllib.request
 
-import re, ipdb
+import re
 
 
 class Marmiton(object):
