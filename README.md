@@ -23,6 +23,8 @@ Useful, efficient and super simple to use.
 - name: name of the recipe  
 - ingredients: string list of the recipe ingredients (including quantities)  
 - steps: string list of each step of the recipe  
+- cook_time: string, cooking time of the recipe  
+- prep_time: string, estimated preparation time of the recipe  
 
 ### Usage / Example :
 
@@ -46,7 +48,8 @@ main_recipe_url = query_result[0]['url']
 detailed_recipe = Marmiton.get(main_recipe_url)  # Get the details of the first returned recipe (most relevant in our case)
 
 # Display result :
-print("## %s :" % query_result[0]['name'])  # Name of the recipe
+print("## %s :" % detailed_recipe['name'])  # Name of the recipe
+print("## Preparation time : %s / Cooking time : %s" % (detailed_recipe['prep_time'], detailed_recipe['cook_time']))  # Cooking & preparation time
 
 for ingredient in detailed_recipe['ingredients']:  # List of ingredients
     print("- %s" % ingredient)
