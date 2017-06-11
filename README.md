@@ -1,5 +1,5 @@
 # python-marmiton
-##### v0.1.1
+##### v0.1.3
 
 Python API to search &amp; get recipes from the 'marmiton.com' website (web crawler, unofficial)  
 Useful, efficient and super simple to use.  
@@ -60,6 +60,9 @@ for step in detailed_recipe['steps']:  # List of cooking steps
 - Multiple images returned for the search / get requests  
 - Limit the number of returned query on search  
 - More returned data & query options
+
+Related projects :  
+- https://github.com/remaudcorentin-dev/python-allrecipes
 
 ###### Support / Contact : remaudcorentin.dev@gmail.com
 
