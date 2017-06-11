@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 from bs4 import BeautifulSoup
 
@@ -74,8 +75,14 @@ class Marmiton(object):
 		ingredients = [ing.strip(' \t\n\r') for ing in main_data.find("div", {"class": "m_content_recette_ingredients"}).get_text().strip('\r\n\t').split("-")][1:]
 		steps = [step.strip(' \t\n\r') for step in main_data.find("div", {"class": "m_content_recette_todo"}).get_text().replace("Préparation de la recette :", "").strip(' \t\n\r').split('.') if step.strip(' \t\n\r')]
 
+		recipe_infos = soup.find("p", {"class": "m_content_recette_info"})
+		prep_time = recipe_infos.find("span", {"class": "preptime"}).get_text()
+		cook_time = recipe_infos.find("span", {"class": "cooktime"}).get_text()
+
 		data = {"ingredients": ingredients,
 				"steps": steps,
-				"name":name}
+				"name": name,
+				"prep_time": "%sminutes" % prep_time,
+				"cook_time": "%s minutes" % cook_time}
 
 		return data

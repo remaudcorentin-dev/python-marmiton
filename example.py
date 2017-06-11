@@ -14,11 +14,12 @@ query_options = {
 query_result = Marmiton.search(query_options)
 
 # Get :
-main_recipe_url = query_result[0]['url']
+main_recipe_url = query_result[3]['url']
 detailed_recipe = Marmiton.get(main_recipe_url)  # Get the details of the first returned recipe (most relevant in our case)
 
 # Display result :
-print("## %s :" % query_result[0]['name'])  # Name of the recipe
+print("## %s :" % detailed_recipe['name'])  # Name of the recipe
+print("Cooking Time : %s / Preparation Time : %s" % (detailed_recipe['cook_time'], detailed_recipe['prep_time']))
 
 for ingredient in detailed_recipe['ingredients']:  # List of ingredients
     print("- %s" % ingredient)
