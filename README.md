@@ -4,6 +4,9 @@
 Python API to search &amp; get recipes from the 'marmiton.com' website (web crawler, unofficial)  
 Useful, efficient and super simple to use.  
 
+
+#### /!\ INFO /!\ This seems outdated at this time (July 2018) - due to Marmiton website changes, update will come soon
+
 ### Installation :
 `pip install python-marmiton`  
 
