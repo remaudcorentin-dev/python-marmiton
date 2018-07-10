@@ -25,12 +25,9 @@ Useful, efficient and super simple to use.
 - name: name of the recipe  
 - ingredients: string list of the recipe ingredients (including quantities)  
 - steps: string list of each step of the recipe  
-<<<<<<< HEAD
 - image: if exists, image of the recipe (url).  
-=======
 - cook_time: string, cooking time of the recipe  
 - prep_time: string, estimated preparation time of the recipe  
->>>>>>> b4584bf3b39618c7ef8f60d48b7252c2327135ae
 
 ### Usage / Example :
 
