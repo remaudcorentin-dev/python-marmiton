@@ -8,8 +8,6 @@ import urllib.request
 
 import re
 
-import ipdb
-
 class Marmiton(object):
 
 	@staticmethod
