@@ -5,7 +5,7 @@ Python API to search &amp; get recipes from the 'marmiton.com' website (web craw
 Useful, efficient and super simple to use.  
 
 ### Installation :
-`pip install python-marmiton`  
+`pip install python-marmiton==0.2.2`  
 
 ### Requirements :
 `python >= 3.4`  
