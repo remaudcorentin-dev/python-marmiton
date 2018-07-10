@@ -1,5 +1,5 @@
 # python-marmiton
-##### v0.2.1
+##### v0.2.2
 
 Python API to search &amp; get recipes from the 'marmiton.com' website (web crawler, unofficial)  
 Useful, efficient and super simple to use.  
@@ -36,12 +36,12 @@ from marmiton import Marmiton
 # Search :
 query_options = {
   "aqt": "poulet curry",      # Query keywords - separated by a white space
-  "sort": "rate",             # Sorting options : "markdesc" (rate) | "popularitydesc" (popularity) | "" (empty for relevance, optional)
+#  "sort": "rate",             # Sorting options : "markdesc" (rate) | "popularitydesc" (popularity) | "" (empty for relevance, optional)  # (Obselete)
   "dt": "platprincipal",      # Plate type : "entree", "platprincipal", "accompagnement", "amusegueule", "sauce" (optional)
   "exp": 3,                   # Plate price : 1 -> Cheap, 2 -> Medium, 3 -> Kind of expensive (optional)
   "dif": 2,                   # Recipe difficulty : 1 -> Very easy, 2 -> Easy, 3 -> Medium, 4 -> Advanced (optional)
   "veg": 0,                   # Vegetarien only : 0 -> False, 1 -> True (optional)
-  "rct": 0,                   # Without cooking : 0 -> False, 1 -> True (optional)
+#  "rct": 0,                   # Without cooking : 0 -> False, 1 -> True (optional)  # (Obselete)
 }
 query_result = Marmiton.search(query_options)
 
