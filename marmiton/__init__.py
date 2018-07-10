@@ -8,6 +8,7 @@ import urllib.request
 
 import re
 
+import ipdb
 
 class Marmiton(object):
 
@@ -34,21 +35,19 @@ class Marmiton(object):
 		soup = BeautifulSoup(html_content, 'html.parser')
 
 		search_data = []
-		#ipdb.set_trace()
-		main_data = soup.find("div", {"class": "m_resultats_recherche"})
-		#ipdb.set_trace()
-		articles = soup.findAll("div", {"class": "m_item"})
-		#ipdb.set_trace()
+                
+		articles = soup.findAll("a", {"class": "recipe-card"})
 
 		iterarticles = iter(articles)
 		for article in iterarticles:
 			data = {}
 			try:
-				data["name"] = article.find("div", {"class": "m_titre_resultat"}).get_text().strip(' \t\n\r')
-				data["description"] = article.find("div", {"class": "m_texte_resultat"}).get_text().strip(' \t\n\r')
-				data["url"] = article.find("a", href=re.compile('^/recettes/'))['href']
+				data["name"] = article.find("h4", {"class": "recipe-card__title"}).get_text().strip(' \t\n\r')
+				data["description"] = article.find("div", {"class": "recipe-card__description"}).get_text().strip(' \t\n\r')
+				data["url"] = article['href']
+				data["rate"] = article.find("span", {"class": "recipe-card__rating__value"}).text.strip(' \t\n\r')
 				try:
-					data["image"] = article.find("a", href=re.compile('^/recettes/')).find("img")["src"]
+					data["image"] = article.find('img')['src']
 				except Exception as e1:
 					pass
 			except Exception as e2:
@@ -70,19 +69,39 @@ class Marmiton(object):
 		html_content = urllib.request.urlopen(url).read()
 		soup = BeautifulSoup(html_content, 'html.parser')
 
-		main_data = soup.find("div", {"class": "m_content_recette_main"})
-		name = soup.find("h1", {"class", "m_title fn"}).get_text().strip(' \t\n\r')
-		ingredients = [ing.strip(' \t\n\r') for ing in main_data.find("div", {"class": "m_content_recette_ingredients"}).get_text().strip('\r\n\t').split("-")][1:]
-		steps = [step.strip(' \t\n\r') for step in main_data.find("div", {"class": "m_content_recette_todo"}).get_text().replace("Préparation de la recette :", "").strip(' \t\n\r').split('.') if step.strip(' \t\n\r')]
 
-		recipe_infos = soup.find("p", {"class": "m_content_recette_info"})
-		prep_time = recipe_infos.find("span", {"class": "preptime"}).get_text()
-		cook_time = recipe_infos.find("span", {"class": "cooktime"}).get_text()
+		main_data = soup.find("div", {"class": "m_content_recette_main"})
+		name = soup.find("h1", {"class", "main-title "}).get_text().strip(' \t\n\r')
+
+		ingredients = [item.text.replace("\n", "").strip() for item in soup.find_all("li", {"class": "recipe-ingredients__list__item"})]
+
+		steps = []
+		soup_steps = soup.find_all("li", {"class": "recipe-preparation__list__item"})
+		for soup_step in soup_steps:
+			soup_step.find("h3").decompose()
+			steps.append(soup_step.text.replace("\n", "").replace("\t", "").strip())
+
+		prep_time = "0"
+		cook_time = "0"
+
+		try:
+			prep_time = soup.find("span", {"class": "recipe-infos__timmings__value"}).text.replace("\n", "").replace("\t", "").strip()
+		except:
+			pass
+
+		try:
+			cook_time = soup.find("div", {"class": "recipe-infos__timmings__cooking"}).find("span").text.replace("\n", "").replace("\t", "").strip()
+		except:
+			pass
+
+		image = soup.find("img", {"id": "af-diapo-desktop-0_img"})['src'] if soup.find("img", {"id": "af-diapo-desktop-0_img"}) else ""
 
 		data = {"ingredients": ingredients,
 				"steps": steps,
 				"name": name,
-				"prep_time": "%sminutes" % prep_time,
-				"cook_time": "%s minutes" % cook_time}
+				"image": image if image else "",
+				"prep_time": prep_time,
+				"cook_time": cook_time}
 
 		return data
+

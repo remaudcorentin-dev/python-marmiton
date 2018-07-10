@@ -1,5 +1,5 @@
 # python-marmiton
-##### v0.1.3
+##### v0.2.1
 
 Python API to search &amp; get recipes from the 'marmiton.com' website (web crawler, unofficial)  
 Useful, efficient and super simple to use.  
@@ -17,12 +17,14 @@ Useful, efficient and super simple to use.
 - name: name of the recipe.  
 - description: short description of the recipe.  
 - url: url of the detailed recipe on 'allrecipes.com'.  
-- image: if exists, image of the recipe.  
+- image: if exists, image of the recipe (url).  
+- rate: recipe rate bewteen 0 and 5.  
 
 ##### Marmiton.get return a dictionary like :  
 - name: name of the recipe  
 - ingredients: string list of the recipe ingredients (including quantities)  
 - steps: string list of each step of the recipe  
+- image: if exists, image of the recipe (url).  
 
 ### Usage / Example :
 
