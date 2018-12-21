@@ -1,6 +1,8 @@
 # python-marmiton
 ##### v0.2.3
 
+###### News : package up to date on 2018-12-21 on version 0.2.3 according to marmiton website html recent changes.
+
 Python API to search &amp; get recipes from the 'marmiton.com' website (web crawler, unofficial)  
 Useful, efficient and super simple to use.  
 
