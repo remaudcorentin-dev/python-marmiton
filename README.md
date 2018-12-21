@@ -50,7 +50,7 @@ main_recipe_url = query_result[0]['url']
 detailed_recipe = Marmiton.get(main_recipe_url)  # Get the details of the first returned recipe (most relevant in our case)
 
 # Display result :
-print("## %s :" % detailed_recipe['name'])  # Name of the recipe
+print("## %s, (%s / 5) :" % (detailed_recipe['name'], recipe['rate']))  # Name of the recipe
 print("## Preparation time : %s / Cooking time : %s" % (detailed_recipe['prep_time'], detailed_recipe['cook_time']))  # Cooking & preparation time
 
 for ingredient in detailed_recipe['ingredients']:  # List of ingredients
