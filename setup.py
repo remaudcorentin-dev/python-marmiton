@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
 	name='python-marmiton',
-	version='0.2.2',
+	version='0.2.3',
 	description='Easy-to-use Python API for the marmiton.com cooking website.',
 	packages=['marmiton'],
 	url='https://github.com/remaudcorentin-dev/python-marmiton',
