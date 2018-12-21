@@ -13,7 +13,7 @@ query_options = {
 query_result = Marmiton.search(query_options)
 
 # Get :
-recipe = query_result[3]
+recipe = query_result[1]
 main_recipe_url = recipe['url']
 
 detailed_recipe = Marmiton.get(main_recipe_url)  # Get the details of the first returned recipe (most relevant in our case)

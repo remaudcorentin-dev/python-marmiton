@@ -33,7 +33,8 @@ class Marmiton(object):
 
 		search_data = []
                 
-		articles = soup.findAll("a", {"class": "recipe-card"})
+		articles = soup.findAll("div", {"class": "recipe-card"})
+
 
 		iterarticles = iter(articles)
 		for article in iterarticles:
@@ -41,7 +42,7 @@ class Marmiton(object):
 			try:
 				data["name"] = article.find("h4", {"class": "recipe-card__title"}).get_text().strip(' \t\n\r')
 				data["description"] = article.find("div", {"class": "recipe-card__description"}).get_text().strip(' \t\n\r')
-				data["url"] = article['href']
+				data["url"] = article.find("a", {"class": "recipe-card-link"})['href']
 				data["rate"] = article.find("span", {"class": "recipe-card__rating__value"}).text.strip(' \t\n\r')
 				try:
 					data["image"] = article.find('img')['src']
