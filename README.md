@@ -19,7 +19,7 @@ Useful, efficient and super simple to use.
 ##### Marmiton.search return a list of dictionary like :  
 - name: name of the recipe.  
 - description: short description of the recipe.  
-- url: url of the detailed recipe on 'allrecipes.com'.  
+- url: url of the detailed recipe on 'marmiton.com'.  
 - image: if exists, image of the recipe (url).  
 - rate: recipe rate bewteen 0 and 5.  
 
