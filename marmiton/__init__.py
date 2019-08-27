@@ -75,7 +75,10 @@ class Marmiton(object):
 		soup = BeautifulSoup(html_content, 'html.parser')
 
 		main_data = soup.find("div", {"class": "m_content_recette_main"})
-		name = soup.find("h1", {"class", "main-title "}).get_text().strip(' \t\n\r')
+		try:
+			name = soup.find("h1", {"class", "main-title "}).get_text().strip(' \t\n\r')
+		except:
+			name = soup.find("h1", {"class", "main-title"}).get_text().strip(' \t\n\r')
 
 		ingredients = [item.text.replace("\n", "").strip() for item in soup.find_all("li", {"class": "recipe-ingredients__list__item"})]
 
