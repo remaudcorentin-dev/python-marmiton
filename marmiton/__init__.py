@@ -116,7 +116,6 @@ class Marmiton(object):
 		steps = []
 		soup_steps = soup.find_all("li", {"class": "recipe-preparation__list__item"})
 		for soup_step in soup_steps:
-			soup_step.find("h3").decompose()
 			steps.append(Marmiton.__clean_text(soup_step))
 
 		image = soup.find("img", {"id": "af-diapo-desktop-0_img"})['src'] if soup.find("img", {"id": "af-diapo-desktop-0_img"}) else ""
