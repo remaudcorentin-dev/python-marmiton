@@ -68,8 +68,8 @@ class Marmiton(object):
 		"""
 		data = {}
 
-		base_url = "http://www.marmiton.org/"
-		url = base_url + uri
+		base_url = "http://www.marmiton.org"
+		url = base_url + ("" if uri.startswith("/") else "/") + uri
 
 		html_content = urllib.request.urlopen(url).read()
 		soup = BeautifulSoup(html_content, 'html.parser')
