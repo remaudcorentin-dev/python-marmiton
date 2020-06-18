@@ -8,6 +8,10 @@ import urllib.request
 import re
 
 
+class RecipeNotFound(Exception):
+	pass
+
+
 class Marmiton(object):
 
 	@staticmethod
@@ -33,9 +37,8 @@ class Marmiton(object):
 		soup = BeautifulSoup(html_content, 'html.parser')
 
 		search_data = []
-                
-		articles = soup.findAll("div", {"class": "recipe-card"})
 
+		articles = soup.findAll("div", {"class": "recipe-card"})
 
 		iterarticles = iter(articles)
 		for article in iterarticles:
@@ -68,10 +71,14 @@ class Marmiton(object):
 		"""
 		data = {}
 
-		base_url = "http://www.marmiton.org/"
-		url = base_url + uri
+		base_url = "http://www.marmiton.org"
+		url = base_url + ("" if uri.startswith("/") else "/") + uri
 
-		html_content = urllib.request.urlopen(url).read()
+		try:
+			html_content = urllib.request.urlopen(url).read()
+		except urllib.error.HTTPError as e:
+			raise RecipeNotFound if e.code == 404 else e
+
 		soup = BeautifulSoup(html_content, 'html.parser')
 
 		main_data = soup.find("div", {"class": "m_content_recette_main"})
@@ -88,13 +95,13 @@ class Marmiton(object):
 			tags = []
 
 		recipe_elements = [
-			{"name": "author", "query": soup.find('span', {"class": "recipe-author__name"}) },
-			{"name": "rate", "query": soup.find("span", {"class": "recipe-reviews-list__review__head__infos__rating__value"}) },
-			{"name": "difficulty", "query": soup.find("div", {"class": "recipe-infos__level"}) },
-			{"name": "budget", "query": soup.find("div", {"class": "recipe-infos__budget"}) },
-			{"name": "prep_time", "query": soup.find("span", {"class": "recipe-infos__timmings__value"}) },
-			{"name": "total_time", "query": soup.find("span", {"class": "title-2 recipe-infos__total-time__value"}) },
-			{"name": "people_quantity", "query": soup.find("span", {"class": "title-2 recipe-infos__quantity__value"}) },
+			{"name": "author", "query": soup.find('span', {"class": "recipe-author__name"})},
+			{"name": "rate","query": soup.find("span", {"class": "recipe-reviews-list__review__head__infos__rating__value"})},
+			{"name": "difficulty", "query": soup.find("div", {"class": "recipe-infos__level"})},
+			{"name": "budget", "query": soup.find("div", {"class": "recipe-infos__budget"})},
+			{"name": "prep_time", "query": soup.find("span", {"class": "recipe-infos__timmings__value"})},
+			{"name": "total_time", "query": soup.find("span", {"class": "title-2 recipe-infos__total-time__value"})},
+			{"name": "people_quantity", "query": soup.find("span", {"class": "title-2 recipe-infos__quantity__value"})},
 			{"name": "author_tip", "query": soup.find("div", {"class": "recipe-chief-tip mrtn-recipe-bloc "}).find("p", {"class": "mrtn-recipe-bloc__content"}) if soup.find("div", {"class": "recipe-chief-tip mrtn-recipe-bloc "}) else "" },
 		]
 		for recipe_element in recipe_elements:
