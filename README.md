@@ -1,15 +1,16 @@
 # python-marmiton
-##### v0.3.2
+##### v0.3.3
 
 Python API to search &amp; get recipes from the 'marmiton.com' website (web crawler, unofficial)  
 Useful, efficient and super simple to use.  
 
+###### News (0.3.2) : Bug fixes & code improvements
 ###### News (0.3.2) : Quick bug fix when h1 class name differ in some pages
 ###### News (0.3.1) : New fields returned by the 'get' API (see the full list bellow)
 ###### News (0.2.3) : Package fully up to date on 2018-12-21 on version 0.2.3 according to marmiton website html recent changes
 
 ### Installation :
-`pip install python-marmiton==0.3.2`  
+`pip install python-marmiton==0.3.3`  
 
 ### Requirements :
 `python >= 3.4`  
