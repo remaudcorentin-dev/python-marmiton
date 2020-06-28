@@ -49,7 +49,7 @@ class Marmiton(object):
 				data["url"] = article.find("a", {"class": "recipe-card-link"})['href']
 				data["rate"] = article.find("span", {"class": "recipe-card__rating__value"}).text.strip(' \t\n\r')
 				try:
-					data["image"] = article.find('img')['src']
+					data["image"] = article.find('img')['data-src']
 				except Exception as e1:
 					pass
 			except Exception as e2:
@@ -102,7 +102,7 @@ class Marmiton(object):
 			{"name": "prep_time", "query": soup.find("span", {"class": "recipe-infos__timmings__value"})},
 			{"name": "total_time", "query": soup.find("span", {"class": "title-2 recipe-infos__total-time__value"})},
 			{"name": "people_quantity", "query": soup.find("span", {"class": "title-2 recipe-infos__quantity__value"})},
-			{"name": "author_tip", "query": soup.find("div", {"class": "recipe-chief-tip mrtn-recipe-bloc "}).find("p", {"class": "mrtn-recipe-bloc__content"}) if soup.find("div", {"class": "recipe-chief-tip mrtn-recipe-bloc "}) else "" },
+			{"name": "author_tip", "query": soup.find("p", {"class": "mrtn-recipe-bloc__content"})},
 		]
 		for recipe_element in recipe_elements:
 			try:
