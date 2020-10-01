@@ -1,1 +1,1 @@
-beautifulsoup4==4.6.0
+beautifulsoup4==4.6.0  #Highly recommended to mention this version of beautifulsoup in requirements.txt for this project until and unless there is no change
