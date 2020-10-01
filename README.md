@@ -16,7 +16,7 @@ Useful, efficient and super simple to use.
 `python >= 3.4`  
 `beautifulsoup4 >= 4.6`  
 
-### API References
+### API References for the project
 
 ##### Marmiton.search return a list of dictionary like :  
 - name: name of the recipe.  
