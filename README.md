@@ -1,4 +1,4 @@
-# python-marmiton
+# Python-Marmiton
 ##### v0.3.3
 
 Python API to search &amp; get recipes from the 'marmiton.com' website (web crawler, unofficial)  
@@ -91,7 +91,7 @@ if detailed_recipe['author_tip']:
     print("\nNote de l'auteur :\n%s" % detailed_recipe['author_tip'])
 ```
 
-### OnGoing features :  
+### OnGoing Features :  
 - Preparation time, Cooking time, Total time, etc (available on v0.2.2)  
 - Multiple images returned for the search / get requests  
 - Limit the number of returned query on search  
