@@ -1,4 +1,4 @@
-# python-marmiton
+# python-marmiton an amazing project
 ##### v0.3.3
 
 Python API to search &amp; get recipes from the 'marmiton.com' website (web crawler, unofficial)  
