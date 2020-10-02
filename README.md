@@ -1,7 +1,8 @@
-# python-marmiton
+# PYTHON MARMITON
+----------------------------------------------------------------------------------------------------------------------------------------
 ##### v0.3.3
 
-Python API to search &amp; get recipes from the 'marmiton.com' website (web crawler, unofficial)  
+Python API to search & amp; get recipes from the 'marmiton.com' website (web crawler, unofficial)  
 Useful, efficient and super simple to use.  
 
 ###### News (0.3.3) : Bug fixes & code improvements
@@ -9,23 +10,26 @@ Useful, efficient and super simple to use.
 ###### News (0.3.1) : New fields returned by the 'get' API (see the full list bellow)
 ###### News (0.2.3) : Package fully up to date on 2018-12-21 on version 0.2.3 according to marmiton website html recent changes
 
-### Installation :
+### INSTALLATION 
+--------------------------------------------------------
 `pip install python-marmiton==0.3.3`  
 
-### Requirements :
+### REQUIREMENTS 
+--------------------------------------------------------
 `python >= 3.4`  
 `beautifulsoup4 >= 4.6`  
 
-### API References
+### API REFERENCES
+---------------------------------------------------------
 
-##### Marmiton.search return a list of dictionary like :  
+##### Marmiton.search Return A List Of Dictionary Like :  
 - name: name of the recipe.  
 - description: short description of the recipe.  
 - url: url of the detailed recipe on 'marmiton.com'.  
 - image: if exists, image of the recipe (url).  
 - rate: recipe rate bewteen 0 and 5.  
 
-##### Marmiton.get return a dictionary like :  
+##### Marmiton.get Return A Dictionary Like :  
 - name: name of the recipe  
 - ingredients: string list of the recipe ingredients (including quantities)  
 - steps: string list of each step of the recipe  
@@ -43,7 +47,8 @@ Useful, efficient and super simple to use.
 - author_tip: string, note or tip left by the author  
 - tags: string list, tags of the recipe  
 
-### Usage / Example :
+### USAGE/EXAMPLE
+--------------------------------------------------------------------------------------------
 
 ```python
 from marmiton import Marmiton, RecipeNotFound
@@ -91,14 +96,15 @@ if detailed_recipe['author_tip']:
     print("\nNote de l'auteur :\n%s" % detailed_recipe['author_tip'])
 ```
 
-### OnGoing features :  
+### ONGOING FEATURES
+------------------------------------------------------------------------------------
 - Preparation time, Cooking time, Total time, etc (available on v0.2.2)  
 - Multiple images returned for the search / get requests  
 - Limit the number of returned query on search  
 - More returned data & query options
 
-Related projects :  
+Related Projects :  
 - https://github.com/remaudcorentin-dev/python-allrecipes
 
-###### Support / Contact : remaudcorentin.dev@gmail.com
+###### SUPPORT/CONTACT : remaudcorentin.dev@gmail.com
 
