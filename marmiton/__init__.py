@@ -38,16 +38,15 @@ class Marmiton(object):
 
 		search_data = []
 
-		articles = soup.findAll("div", {"class": "recipe-card"})
+		articles = soup.findAll("a", {"class": "MRTN__sc-1gofnyi-2 gACiYG"})
 
 		iterarticles = iter(articles)
 		for article in iterarticles:
 			data = {}
 			try:
-				data["name"] = article.find("h4", {"class": "recipe-card__title"}).get_text().strip(' \t\n\r')
-				data["description"] = article.find("div", {"class": "recipe-card__description"}).get_text().strip(' \t\n\r')
-				data["url"] = article.find("a", {"class": "recipe-card-link"})['href']
-				data["rate"] = article.find("span", {"class": "recipe-card__rating__value"}).text.strip(' \t\n\r')
+				data["name"] = article.find("h4", {"class": "MRTN__sc-30rwkm-0 dJvfhM"}).get_text().strip(' \t\n\r')
+				data["url"] = article['href']
+				data["rate"] = article.find("span", {"class": "SHRD__sc-10plygc-0 jHwZwD"}).text.strip(' \t\n\r')
 				try:
 					data["image"] = article.find('img')['data-src']
 				except Exception as e1:
@@ -81,28 +80,27 @@ class Marmiton(object):
 
 		soup = BeautifulSoup(html_content, 'html.parser')
 
-		main_data = soup.find("div", {"class": "m_content_recette_main"})
-		try:
-			name = soup.find("h1", {"class", "main-title "}).get_text().strip(' \t\n\r')
-		except:
-			name = soup.find("h1", {"class", "main-title"}).get_text().strip(' \t\n\r')
+		main_data = soup.find("div", {"class": "SHRD__sc-juz8gd-1 kOwNOA"})
+		
+		name = soup.find("h1", {"class", "SHRD__sc-10plygc-0 itJBWW"}).get_text().strip(' \t\n\r')
 
-		ingredients = [item.text.replace("\n", "").strip() for item in soup.find_all("li", {"class": "recipe-ingredients__list__item"})]
-
-		try:
-			tags = list(set([item.text.replace("\n", "").strip() for item in soup.find('ul', {"class": "mrtn-tags-list"}).find_all('li', {"class": "mrtn-tag"})]))
-		except:
-			tags = []
+		ingredients = []
+		soup_ingredients = soup.find_all('div', {'class':'MuiGrid-root MuiGrid-item MuiGrid-grid-xs-3 MuiGrid-grid-sm-3'})
+		for soup_ingredients in soup_ingredients:
+			try:
+			    ingredients.append(element.find('span', {'class':'RCP__sc-8cqrvd-3 cDbUWZ'}).get_text())
+			except:
+			    ingredients.append(element.find('span', {'class':'RCP__sc-8cqrvd-3 itCXhd'}).get_text())
 
 		recipe_elements = [
-			{"name": "author", "query": soup.find('span', {"class": "recipe-author__name"})},
-			{"name": "rate","query": soup.find("span", {"class": "recipe-reviews-list__review__head__infos__rating__value"})},
-			{"name": "difficulty", "query": soup.find("div", {"class": "recipe-infos__level"})},
-			{"name": "budget", "query": soup.find("div", {"class": "recipe-infos__budget"})},
-			{"name": "prep_time", "query": soup.find("span", {"class": "recipe-infos__timmings__value"})},
-			{"name": "total_time", "query": soup.find("span", {"class": "title-2 recipe-infos__total-time__value"})},
-			{"name": "people_quantity", "query": soup.find("span", {"class": "title-2 recipe-infos__quantity__value"})},
-			{"name": "author_tip", "query": soup.find("p", {"class": "mrtn-recipe-bloc__content"})},
+			{"name": "author", "query": soup.find('span', {"class": "RCP__sc-ox3jb6-5 fwQMuu"})},
+			{"name": "rate","query": soup.find("span", {"class": "SHRD__sc-10plygc-0 jHwZwD"})},
+			{"name": "difficulty", "query": soup.find("div", {"class": "RCP__sc-1qnswg8-1 iDYkZP"})},
+			{"name": "budget", "query": soup.find("p", {"class": "RCP__sc-1qnswg8-1 iDYkZP"})},
+			{"name": "prep_time", "query": soup.find("span", {"class": "SHRD__sc-10plygc-0 bzAHrL"})},
+			{"name": "total_time", "query": soup.find("p", {"class": "RCP__sc-1qnswg8-1 iDYkZP"})},
+			{"name": "people_quantity", "query": soup.find("span", {"class": "SHRD__sc-w4kph7-4 hYSrSW"})},
+			{"name": "author_tip", "query": soup.find("div", {"class": "RCP__sc-ox3jb6-8 eWzWSo"})},
 		]
 		for recipe_element in recipe_elements:
 			try:
@@ -111,28 +109,25 @@ class Marmiton(object):
 				data[recipe_element['name']] = ""
 
 		try:
-			cook_time = Marmiton.__clean_text(soup.find("div", {"class": "recipe-infos__timmings__cooking"}).find("span"))
+			cook_time = Marmiton.__clean_text(soup.find("span", {"class": "SHRD__sc-10plygc-0 bzAHrL"})
 		except:
 			cook_time = "0"
 
 		try:
-			nb_comments = Marmiton.__clean_text(soup.find("span", {"class": "recipe-infos-users__value mrtn-hide-on-print"})).split(" ")[0]
+			nb_comments = Marmiton.__clean_text(soup.find("span", {"class": "SHRD__sc-10plygc-0 cAYPwA"})).split(" ")[0]
 		except:
 			nb_comments = ""
 
 		steps = []
-		soup_steps = soup.find_all("li", {"class": "recipe-preparation__list__item"})
+		soup_steps = soup.find_all('p', {'class':'RCP__sc-1wtzf9a-3 jFIVDw'})
 		for soup_step in soup_steps:
 			steps.append(Marmiton.__clean_text(soup_step))
-
-		image = soup.find("img", {"id": "af-diapo-desktop-0_img"})['src'] if soup.find("img", {"id": "af-diapo-desktop-0_img"}) else ""
 
 		data.update({
 			"ingredients": ingredients,
 			"steps": steps,
 			"name": name,
 			"tags": tags,
-			"image": image if image else "",
 			"nb_comments": nb_comments,
 			"cook_time": cook_time
 		})
