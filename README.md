@@ -102,6 +102,8 @@ if detailed_recipe['author_tip']:
 - Limit the number of returned query on search  
 - More returned data & query options
 
+###### Limitation: This module is provided as it. As Marmiton makes regular updates to their website, this library might stop working temporarily at any time, the time that the code is updated to match the new Marmiton website structure.
+
 ##### Important: Please note that the owner of this project does not own any of the returned data, all data are property of MARMITON. This library is shared for free for educational purposes only. The owner declines any responsability of the usage made by the users, please refer to https://www.marmiton.org/sp/aide/conditions-generales-utilisation.html. If you own the website 'www.marmiton.org' and you do not agree with any of the content of this package please send an email to the address bellow.
 
 ###### Support / Contact : remaudcorentin.dev@gmail.com
