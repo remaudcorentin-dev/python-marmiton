@@ -6,6 +6,7 @@ import urllib.parse
 import urllib.request
 
 import re
+import ssl
 
 
 class RecipeNotFound(Exception):
@@ -33,24 +34,35 @@ class Marmiton(object):
 
 		url = base_url + query_url
 
-		html_content = urllib.request.urlopen(url).read()
+		handler = urllib.request.HTTPSHandler(context=ssl._create_unverified_context())
+		opener = urllib.request.build_opener(handler)
+		response = opener.open(url)
+		html_content = response.read()
+
 		soup = BeautifulSoup(html_content, 'html.parser')
 
 		search_data = []
 
-		articles = soup.findAll("div", {"class": "recipe-card"})
+		articles = soup.findAll("a", href=True)
+		articles = [a for a in articles if a["href"].startswith("/recettes/recette_")]
 
 		iterarticles = iter(articles)
 		for article in iterarticles:
 			data = {}
 			try:
-				data["name"] = article.find("h4", {"class": "recipe-card__title"}).get_text().strip(' \t\n\r')
-				data["description"] = article.find("div", {"class": "recipe-card__description"}).get_text().strip(' \t\n\r')
-				data["url"] = article.find("a", {"class": "recipe-card-link"})['href']
-				data["rate"] = article.find("span", {"class": "recipe-card__rating__value"}).text.strip(' \t\n\r')
+				data["name"] = article.find("h4").get_text().strip(' \t\n\r')
+				data["url"] = article['href']
+				try:
+					data["rate"] = article.find("span").get_text().split("/")[0]
+				except Exception as e0:
+					pass
 				try:
 					data["image"] = article.find('img')['data-src']
 				except Exception as e1:
+					try:
+						data["image"] = article.find('img')['src']
+					except Exception as e1:
+						pass
 					pass
 			except Exception as e2:
 				pass
@@ -60,82 +72,109 @@ class Marmiton(object):
 		return search_data
 
 	@staticmethod
-	def __clean_text(element):
-		return element.text.replace("\n", "").strip()
+	def _get_name(soup):
+		return soup.find("h1").get_text().strip(' \t\n\r')
 
 	@staticmethod
-	def get(uri):
+	def _get_ingredients(soup):
+		return [item.get_text().strip(' \t\n\r').replace("\xa0", " ") for item in soup.findAll("div", {"class": "MuiGrid-item"})]
+
+	@staticmethod
+	def _get_author(soup):
+		return soup.find("div", text="Note de l'auteur :").parent.parent.findAll("div")[0].findAll("div")[1].get_text()
+
+	@staticmethod
+	def _get_author_tip(soup):
+		return soup.find("div", text="Note de l'auteur :").parent.parent.findAll("div")[3].find_all("div")[1].get_text().replace("\xa0", " ").replace("\r\n", " ").replace("  ", " ").replace("« ", "").replace(" »", "")
+
+	@staticmethod
+	def _get_steps(soup):
+		return [step.parent.parent.find("p").get_text().strip(' \t\n\r') for step in soup.find_all("h3", text=re.compile("^Étape"))]
+
+	@staticmethod
+	def _get_images(soup):
+		return [img.get("data-src") for img in soup.find_all("img", {"height": 150}) if img.get("data-src")]
+
+	@staticmethod
+	def _get_rate(soup):
+		return soup.find("h1").parent.next_sibling.find_all("span")[0].get_text().split("/")[0]
+
+	@staticmethod
+	def _get_nb_comments(soup):
+		return soup.find("h1").parent.next_sibling.find_all("span")[1].get_text().split(" ")[0]
+
+	@staticmethod
+	def _get_total_time__difficulty__budget(soup):
+		svg_data = "M13.207 22.759a2.151 2.151 0 1 0 0 4.302 2.151 2.151 0 0 0 0-4.302z"
+		return soup.find("path", {"d": svg_data}).parent.parent.parent.get_text().split("•")
+
+	@classmethod
+	def _get_total_time(cls, soup):
+		return cls._get_total_time__difficulty__budget(soup)[0].replace("\xa0", " ")
+
+	@classmethod
+	def _get_difficulty(cls, soup):
+		return cls._get_total_time__difficulty__budget(soup)[1]
+
+	@classmethod
+	def _get_budget(cls, soup):
+		return cls._get_total_time__difficulty__budget(soup)[2]
+
+	@staticmethod
+	def _get_cook_time(soup):
+		return soup.find_all(text=re.compile("Cuisson"))[0].parent.next_sibling.next_sibling.get_text()
+
+	@staticmethod
+	def _get_prep_time(soup):
+		return soup.find_all(text=re.compile("Préparation"))[1].parent.next_sibling.next_sibling.get_text().replace("\xa0", " ")
+
+	@staticmethod
+	def _get_recipe_quantity(soup):
+		return " ".join([span.get_text() for span in soup.find("button", {"class": "MuiIconButton-root"}).parent.find_all("span") if span.get_text()])
+
+	@classmethod
+	def get(cls, uri):
 		"""
 		'url' from 'search' method.
 		 ex. "/recettes/recette_wraps-de-poulet-et-sauce-au-curry_337319.aspx"
 		"""
-		data = {}
 
 		base_url = "http://www.marmiton.org"
 		url = base_url + ("" if uri.startswith("/") else "/") + uri
 
 		try:
-			html_content = urllib.request.urlopen(url).read()
+			handler = urllib.request.HTTPSHandler(context=ssl._create_unverified_context())
+			opener = urllib.request.build_opener(handler)
+			response = opener.open(url)
+			html_content = response.read()
 		except urllib.error.HTTPError as e:
 			raise RecipeNotFound if e.code == 404 else e
 
 		soup = BeautifulSoup(html_content, 'html.parser')
 
-		main_data = soup.find("div", {"class": "m_content_recette_main"})
-		try:
-			name = soup.find("h1", {"class", "main-title "}).get_text().strip(' \t\n\r')
-		except:
-			name = soup.find("h1", {"class", "main-title"}).get_text().strip(' \t\n\r')
-
-		ingredients = [item.text.replace("\n", "").strip() for item in soup.find_all("li", {"class": "recipe-ingredients__list__item"})]
-
-		try:
-			tags = list(set([item.text.replace("\n", "").strip() for item in soup.find('ul', {"class": "mrtn-tags-list"}).find_all('li', {"class": "mrtn-tag"})]))
-		except:
-			tags = []
-
-		recipe_elements = [
-			{"name": "author", "query": soup.find('span', {"class": "recipe-author__name"})},
-			{"name": "rate","query": soup.find("span", {"class": "recipe-reviews-list__review__head__infos__rating__value"})},
-			{"name": "difficulty", "query": soup.find("div", {"class": "recipe-infos__level"})},
-			{"name": "budget", "query": soup.find("div", {"class": "recipe-infos__budget"})},
-			{"name": "prep_time", "query": soup.find("span", {"class": "recipe-infos__timmings__value"})},
-			{"name": "total_time", "query": soup.find("span", {"class": "title-2 recipe-infos__total-time__value"})},
-			{"name": "people_quantity", "query": soup.find("span", {"class": "title-2 recipe-infos__quantity__value"})},
-			{"name": "author_tip", "query": soup.find("p", {"class": "mrtn-recipe-bloc__content"})},
+		elements = [
+			{"name": "name", "default_value": ""},
+			{"name": "ingredients", "default_value": []},
+			{"name": "author", "default_value": "Anonyme"},
+			{"name": "author_tip", "default_value": ""},
+			{"name": "steps", "default_value": []},
+			{"name": "images", "default_value": []},
+			{"name": "rate", "default_value": ""},
+			{"name": "difficulty", "default_value": ""},
+			{"name": "budget", "default_value": ""},
+			{"name": "cook_time", "default_value": ""},
+			{"name": "prep_time", "default_value": ""},
+			{"name": "total_time", "default_value": ""},
+			{"name": "recipe_quantity", "default_value": ""},
+			{"name": "nb_comments", "default_value": 0},
 		]
-		for recipe_element in recipe_elements:
+
+		data = {"url": url}
+		for element in elements:
 			try:
-				data[recipe_element['name']] = Marmiton.__clean_text(recipe_element['query'])
+				data[element["name"]] = getattr(cls, "_get_" + element["name"])(soup)
 			except:
-				data[recipe_element['name']] = ""
-
-		try:
-			cook_time = Marmiton.__clean_text(soup.find("div", {"class": "recipe-infos__timmings__cooking"}).find("span"))
-		except:
-			cook_time = "0"
-
-		try:
-			nb_comments = Marmiton.__clean_text(soup.find("span", {"class": "recipe-infos-users__value mrtn-hide-on-print"})).split(" ")[0]
-		except:
-			nb_comments = ""
-
-		steps = []
-		soup_steps = soup.find_all("li", {"class": "recipe-preparation__list__item"})
-		for soup_step in soup_steps:
-			steps.append(Marmiton.__clean_text(soup_step))
-
-		image = soup.find("img", {"id": "af-diapo-desktop-0_img"})['src'] if soup.find("img", {"id": "af-diapo-desktop-0_img"}) else ""
-
-		data.update({
-			"ingredients": ingredients,
-			"steps": steps,
-			"name": name,
-			"tags": tags,
-			"image": image if image else "",
-			"nb_comments": nb_comments,
-			"cook_time": cook_time
-		})
+				data[element["name"]] = element["default_value"]
 
 		return data
 
