@@ -83,7 +83,7 @@ print("Temps de cuisson : %s / Temps de préparation : %s / Temps total : %s." %
 print("Difficulté : '%s'" % detailed_recipe['difficulty'])
 print("Budget : '%s'" % detailed_recipe['budget'])
 
-print("\nRecette pour %s personne(s) :\n" % detailed_recipe['recipe_quantity'])
+print("\nRecette pour %s :\n" % detailed_recipe['recipe_quantity'])
 for ingredient in detailed_recipe['ingredients']:  # List of ingredients
     print("- %s" % ingredient)
 
